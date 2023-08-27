@@ -1,71 +1,87 @@
 import React from "react";
 import DividerLeft from "./DividerLeft";
-const SearchResult = () => {
+import { WordData } from "../interfaces/Dictionary.type";
+
+const SearchResult = ({ data }: { data: WordData[] }) => {
+  const wordData = data[0];
+  const handlePlay = () => {
+    const phoneticWithAudio = wordData.phonetics.find((item) => item.audio);
+
+    if (phoneticWithAudio) {
+      const audio = new Audio(phoneticWithAudio.audio);
+      audio.play();
+    } else {
+      console.log("No audio URL found");
+    }
+  };
   return (
     <div>
       <div className="mt-5 flex justify-between">
         <div className="word">
           <h2 className=" font-bold text-themeblack dark:text-white text-3xl">
-            keyboard
+            {wordData.word}
           </h2>
           <div className="pronunciation">
-            <p className="text-purple text-md mt-2">/ˈkiːbɔːd/</p>
+            <p className="text-purple text-md mt-2">
+              {wordData && wordData.phonetics && wordData.phonetics[0]
+                ? wordData.phonetics[0].text
+                : ""}
+            </p>
           </div>
         </div>
         <div className="sound-player">
-          <button className="p-5 rounded-full bg-lightPurple hover:brightness-90 transition-all duration-200 active:brightness-75">
-            <p className="sr-only">Sound Player</p>
-            <img src="/play-icon.svg" alt="sound-icon" />
-          </button>
+          {wordData.phonetics.find((item) => item.audio) && (
+            <button
+              className="p-5 rounded-full bg-lightPurple hover:brightness-90 transition-all duration-200 active:brightness-75"
+              onClick={handlePlay}
+            >
+              <p className="sr-only">Sound Player</p>
+              <img src="/play-icon.svg" alt="sound-icon" />
+            </button>
+          )}
         </div>
       </div>
-      {/* Divider with the title on the left */}
-      <DividerLeft name="noun" />
 
-      {/* Meaning Section */}
-      <h3 className="mt-5 text-lightGray font-light text-lg">Meaning</h3>
-      <ul className="definitions list-disc marker:text-purple space-y-3 ml-6 my-5 text-gray-700 dark:text-white">
-        <li>
-          (etc.) A set of keys used to operate a typewriter, computer etc.
-        </li>
-        <li>
-          A component of many instruments including the piano, organ, and
-          harpsichord consisting of usually black and white keys that cause
-          different tones to be produced when struck.
-        </li>
-        <li>
-          A device with keys of a musical keyboard, used to control electronic
-          sound-producing devices which may be built into or separate from the
-          keyboard device.
-        </li>
-      </ul>
+      {wordData.meanings.map((meaning, index) => (
+        <React.Fragment key={index}>
+          <DividerLeft name={meaning.partOfSpeech} />
+
+          <h3 className="mt-5 text-lightGray font-light text-lg">Meaning</h3>
+          <ul className="definitions list-disc marker:text-purple space-y-3 ml-6 my-5 text-gray-700 dark:text-white">
+            {meaning.definitions.map((def, defIndex) => (
+              <li key={defIndex}>{def.definition}</li>
+            ))}
+          </ul>
+          {meaning.definitions[0]?.example && (
+            <p className="example-text text-lightGray text-lg font-light">
+              {meaning.definitions[0].example}
+            </p>
+          )}
+        </React.Fragment>
+      ))}
+
       {/* synonyms section */}
       <div className="synonyms-section flex mt-5 items-center">
         <h3 className=" text-lightGray font-light text-lg">Synonyms</h3>
         <h4 className="ml-6 font-bold text-lg text-purple">
-          electronic keyboard
+          {wordData.meanings[0].synonyms.join(", ")}
         </h4>
       </div>
 
-      <DividerLeft name="verb" />
-      <h3 className="mt-5 text-lightGray font-light text-lg">Meaning</h3>
-      <ul className="definitions list-disc marker:text-purple space-y-3 ml-6 my-5 text-gray-700 dark:text-white">
-        <li>To type on a computer keyboard.</li>
-      </ul>
-      <p className="example-text text-lightGray text-lg font-light">
-        "I can type many words on the Keyboard"
-      </p>
       <div className="flex-1 border-t border-gray-200 my-8 dark:border-gray-800" />
       <div className="source-section mb-8 ">
         <p className=" underline text-lightGray ">Source</p>
         <div className="source-link mt-1">
-          <a
-            href="https://en.wiktionary.org/wiki/keyboard"
-            className="underline flex gap-3 dark:text-white"
-          >
-            https://en.wiktionary.org/wiki/keyboard
-            <img src="/link.svg" alt="Link Icon" />
-          </a>
+          {wordData.sourceUrls.map((url, urlIndex) => (
+            <a
+              key={urlIndex}
+              href={url}
+              className="underline flex gap-3 dark:text-white"
+            >
+              {url}
+              <img src="/link.svg" alt="Link Icon" />
+            </a>
+          ))}
         </div>
       </div>
     </div>
