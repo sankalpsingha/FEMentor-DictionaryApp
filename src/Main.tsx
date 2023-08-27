@@ -4,7 +4,7 @@ import SearchInput from "./components/SearchInput";
 import SearchResult from "./components/SearchResult";
 import axios, { AxiosResponse } from "axios";
 import { WordData } from "./interfaces/Dictionary.type";
-
+import Error from "./components/Error";
 const getDictionarySearch = (searchTerm: string) => {
   return axios
     .get("https://api.dictionaryapi.dev/api/v2/entries/en/" + searchTerm)
@@ -46,7 +46,7 @@ function Main() {
   if (!searchTerm) {
     content = null;
   } else if (error) {
-    content = <div>Error occurred: {error.message}</div>;
+    content = <Error faultyWord={searchTerm} />;
   } else if (searchResult) {
     content = <SearchResult data={searchResult} />;
   }
