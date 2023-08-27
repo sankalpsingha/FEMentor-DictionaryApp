@@ -5,7 +5,7 @@ const Header = () => {
   return (
     <div className="flex justify-between">
       <div className="logo">
-        <a href="#" className="-m-1.5 p-1.5">
+        <a href="/" className="-m-1.5 p-1.5">
           <span className="sr-only">Dictionary App</span>
           <img className="h-8 w-auto" src="/book-icon.svg" alt="Book Logo" />
         </a>
