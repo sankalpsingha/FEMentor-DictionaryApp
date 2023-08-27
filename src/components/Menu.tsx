@@ -1,16 +1,33 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
 }
+
+const fonts = ["sans", "serif", "mono"];
+
 const MenuComponent = () => {
+  const [fontClass, setFontClass] = useState(() => {
+    // Get initial font class from local storage, default to 'sans'
+    return localStorage.getItem("fontClass") || "sans";
+  });
+
+  useEffect(() => {
+    // Persist font class in local storage whenever it changes
+    localStorage.setItem("fontClass", fontClass);
+    // Remove any existing font classes from body
+    fonts.forEach((font) => document.body.classList.remove(`font-${font}`));
+    // Add selected font class to body
+    document.body.classList.add(`font-${fontClass}`);
+  }, [fontClass]);
+
   return (
     <div>
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white dark:bg-black dark:text-white px-3 py-2 text-sm font-semibold text-gray-900 ">
-            Sans Serif
+            {fontClass[0].toUpperCase() + fontClass.slice(1)}
             <ChevronDownIcon
               className="-mr-1 h-5 w-5 text-gray-400 dark:text-purple"
               aria-hidden="true"
@@ -29,32 +46,27 @@ const MenuComponent = () => {
         >
           <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             <div className="py-1">
-              <Menu.Item>
-                {({ active }) => (
-                  <a
-                    href="#"
-                    className={classNames(
-                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                      "block px-4 py-2 text-sm font-serif"
-                    )}
-                  >
-                    Serif
-                  </a>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                  <a
-                    href="#"
-                    className={classNames(
-                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                      "block px-4 py-2 text-sm font-mono"
-                    )}
-                  >
-                    Monospace
-                  </a>
-                )}
-              </Menu.Item>
+              {fonts.map((font) => (
+                <Menu.Item key={font}>
+                  {({ active }) => (
+                    <a
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setFontClass(font);
+                      }}
+                      className={classNames(
+                        active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                        "block px-4 py-2 text-sm",
+                        `font-${font}`,
+                        fontClass === font ? "text-blue-500" : null // Highlight the current font
+                      )}
+                    >
+                      {font[0].toUpperCase() + font.slice(1)}
+                    </a>
+                  )}
+                </Menu.Item>
+              ))}
             </div>
           </Menu.Items>
         </Transition>
