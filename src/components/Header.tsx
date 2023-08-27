@@ -1,7 +1,10 @@
 import React from "react";
 import MenuComponent from "./Menu";
 import Toggle from "./Toggle";
-const Header = () => {
+type HeaderComponentProps = {
+  onChangeFontClass: (font: string) => void; // indicates fontChange is a Function that takes a string argument and returns nothing.
+};
+const Header: React.FC<HeaderComponentProps> = ({ onChangeFontClass }) => {
   return (
     <div className="flex justify-between">
       <div className="logo">
@@ -11,7 +14,7 @@ const Header = () => {
         </a>
       </div>
       <div className="options flex items-center ">
-        <MenuComponent />
+        <MenuComponent fontChange={onChangeFontClass} />
         <div className="divider-vertical w-[1px] h-1/2 bg-offWhite"></div>
         <Toggle />
         <img src="/half-moon.svg" className=" px-3" alt="moon-icon" />

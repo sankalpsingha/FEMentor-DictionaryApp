@@ -6,8 +6,11 @@ function classNames(...classes: any[]) {
 }
 
 const fonts = ["sans", "serif", "mono"];
+type MenuComponentProps = {
+  fontChange: (font: string) => void; // indicates fontChange is a Function that takes a string argument and returns nothing.
+};
 
-const MenuComponent = () => {
+const MenuComponent: React.FC<MenuComponentProps> = ({ fontChange }) => {
   const [fontClass, setFontClass] = useState(() => {
     // Get initial font class from local storage, default to 'sans'
     return localStorage.getItem("fontClass") || "sans";
@@ -16,11 +19,8 @@ const MenuComponent = () => {
   useEffect(() => {
     // Persist font class in local storage whenever it changes
     localStorage.setItem("fontClass", fontClass);
-    // Remove any existing font classes from body
-    fonts.forEach((font) => document.body.classList.remove(`font-${font}`));
-    // Add selected font class to body
-    document.body.classList.add(`font-${fontClass}`);
-  }, [fontClass]);
+    fontChange(fontClass);
+  }, [fontClass, fontChange]);
 
   return (
     <div>
@@ -55,6 +55,7 @@ const MenuComponent = () => {
                       onClick={(e) => {
                         e.preventDefault();
                         setFontClass(font);
+                        fontChange(font);
                       }}
                       className={classNames(
                         active ? "bg-gray-100 text-gray-900" : "text-gray-700",

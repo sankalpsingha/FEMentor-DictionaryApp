@@ -19,6 +19,11 @@ function Main() {
   const [searchTerm, setSearchTerm] = React.useState<string>("");
   const [searchResult, setSearchResult] = useState<WordData[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
+  const [fontClass, setFontClass] = useState("sans");
+
+  const handleChangeFontClass = (newFontClass: string) => {
+    setFontClass(newFontClass); // Updates the font class in main component
+  };
 
   // get the search results from axios when the searchTerm changes
   useEffect(() => {
@@ -51,10 +56,14 @@ function Main() {
     content = <SearchResult data={searchResult} />;
   }
 
+  console.log("fontClass", fontClass);
+
   return (
-    <div className="absolute w-full min-h-screen bg-cream dark:bg-black">
+    <div
+      className={`absolute w-full min-h-screen bg-cream dark:bg-black font-${fontClass}`}
+    >
       <div className="mx-auto max-w-3xl md:my-20 px-5 ">
-        <Header />
+        <Header onChangeFontClass={handleChangeFontClass} />
         <SearchInput onSearchTermChange={handleSearchTermChange} />
         {content}
       </div>
