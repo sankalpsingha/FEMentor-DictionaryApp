@@ -49,6 +49,7 @@ const MenuComponent = () => {
               {fonts.map((font) => (
                 <Menu.Item key={font}>
                   {({ active }) => (
+                    // eslint-disable-next-line jsx-a11y/anchor-is-valid
                     <a
                       href="#"
                       onClick={(e) => {
@@ -59,7 +60,7 @@ const MenuComponent = () => {
                         active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                         "block px-4 py-2 text-sm",
                         `font-${font}`,
-                        fontClass === font ? "text-blue-500" : null // Highlight the current font
+                        fontClass === font ? "text-purple" : null // Highlight the current font
                       )}
                     >
                       {font[0].toUpperCase() + font.slice(1)}
